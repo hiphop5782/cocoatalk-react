@@ -32,7 +32,13 @@
 .fullscreen .message-container .message-wrapper.my {
     flex-direction: row-reverse;
 }
-.fullscreen .message-container .message-wrapper .content {
+.fullscreen .message-container .message-wrapper .content-wrapper .sender {
+    color: #222;
+    font-weight: bold;
+    font-size: 1.25em;
+    margin-bottom: 0.25em;
+}
+.fullscreen .message-container .message-wrapper .content-wrapper .content {
     background-color: white;
     color: #222;
     font-size: 1.25em;
@@ -50,13 +56,19 @@
 .fullscreen .message-container .message-wrapper.my .time {
     margin-right: 0.5em; 
 }
-.fullscreen .message-container .message-wrapper .profile {
+.fullscreen .message-container .message-wrapper .profile-wrapper {
     width: 3em;
     height: 3em;
+    margin-right: 0.5em;
+}
+.fullscreen .message-container .message-wrapper .profile-wrapper .profile {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     border-radius: 50%;
+    background-color: white;
 }
-.fullscreen .message-container .message-wrapper .profile > img {
+.fullscreen .message-container .message-wrapper .profile-wrapper .profile > img {
     width: 100%;
     height: 100%;
 }

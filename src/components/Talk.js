@@ -141,21 +141,30 @@ const Talk = () => {
 
                             {/* 메세지 출력창 */}
                             <div className="message-container d-flex flex-column" ref={historyWrapper}>
-                                {history.map((m, i) => (<>
+                                {history.map((m, i) => (<div key={i}>
                                     {/* 일반 메세지 */}
-                                    <div className={`message-wrapper${m.sender === nickname ? ' my' : ''}`} key={i}>
+                                    <div className={`message-wrapper${m.sender === nickname ? ' my' : ''}`}>
                                         {m.type === "message" && (<>
                                             {m.sender !== nickname && (
-                                                <div className="profile me-2">
-                                                    <img src={`${process.env.REACT_APP_BACKEND_URL}/profile/${m.sender}`} />
+                                                <div className="profile-wrapper">
+                                                {checkSameSenderAndSameTime(m, history[i-1]) === false && (
+                                                    <div className="profile me-2">
+                                                        <img src={`${process.env.REACT_APP_BACKEND_URL}/profile/${m.sender}`} />
+                                                    </div>
+                                                )}
                                                 </div>
                                             )}
 
-                                            <div className="content">{m.content}</div>
+                                            <div className="content-wrapper">
+                                                {(m.sender !== nickname && checkSameSenderAndSameTime(m, history[i-1]) === false) && (
+                                                <div className="sender">{m.sender}</div>
+                                                )}
+                                                <div className="content">{m.content}</div>
+                                            </div>
 
                                             {/* 시간 출력(다음 메세지가 동일 작성자에 같은 시간이면 미출력) */}
                                             {checkSameSenderAndSameTime(m, history[i + 1]) === false && (
-                                                <div className="time">{moment(m.time).format("a H:mm")}</div>
+                                                <div className="time">{moment(m.time).format("a h:mm")}</div>
                                             )}
                                         </>)}
                                     </div>
@@ -165,7 +174,7 @@ const Talk = () => {
                                             {m.action === "enter" ? `${m.nickname} 님이 입장하셨습니다` : `${m.nickname} 님이 퇴장하셨습니다`}
                                         </div>
                                     )}
-                                </>
+                                </div>
                                 ))}
                             </div>
 

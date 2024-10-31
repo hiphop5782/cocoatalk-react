@@ -51,7 +51,7 @@ const Welcome = ()=>{
         //setPreviewBlob(previewUrl);
     }, [profile]);
     const startTalk = useCallback(()=>{
-        saveNickname();
+        //saveNickname();
         navigate("/talk");
     }, [nickname, profile]);
 
