@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import { RecoilRoot } from "recoil";
 import { BrowserRouter } from "react-router-dom";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootswatch/dist/spacelab/bootstrap.min.css";
+import "bootstrap";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <RecoilRoot>

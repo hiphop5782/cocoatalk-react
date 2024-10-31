@@ -1,0 +1,80 @@
+.cocoa-container {
+    background-color: #C68E5D;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+.message-wrapper {
+    color: white;
+}
+.fullscreen {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+
+    display: flex;
+    flex-direction: column-reverse;
+}
+.fullscreen .message-container {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.fullscreen .message-container .message-wrapper {
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+}
+.fullscreen .message-container .message-wrapper.my {
+    flex-direction: row-reverse;
+}
+.fullscreen .message-container .message-wrapper .content {
+    background-color: white;
+    color: #222;
+    font-size: 1.25em;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    min-width: 5em;
+    max-width: 70%;
+    white-space: pre-wrap;
+}
+.fullscreen .message-container .message-wrapper .time {
+    display: flex;
+    align-items: end;
+    margin-left: 0.5em;
+}
+.fullscreen .message-container .message-wrapper.my .time {
+    margin-right: 0.5em; 
+}
+.fullscreen .message-container .message-wrapper .profile {
+    width: 3em;
+    height: 3em;
+    overflow: hidden;
+    border-radius: 50%;
+}
+.fullscreen .message-container .message-wrapper .profile > img {
+    width: 100%;
+    height: 100%;
+}
+
+.fullscreen .message-container .system-wrapper {
+    border-top: 1px solid black;
+    border-bottom:1px solid black;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 0.25em;
+}
+
+.fullscreen .input-container {
+    background-color: white;
+    min-height: 200px;
+}
+.fullscreen .input-container textarea {
+    resize: none;
+}
