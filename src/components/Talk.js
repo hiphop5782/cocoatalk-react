@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./Talk.css";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import { nicknameState, profileState } from "@src/utils/recoil";
 
 import axios from "axios";
+import TextWithEmoji from "./TextWithEmoji";
 
 const Talk = () => {
     //state
@@ -51,8 +52,12 @@ const Talk = () => {
 
     //메세지 수신 시 스크롤 자동 이동
     const historyWrapper = useRef();
-    useEffect(() => {
-        historyWrapper.current.scrollTop = historyWrapper.current.scrollHeight;
+    useLayoutEffect(() => {
+        if(historyWrapper.current) {
+            setTimeout(()=>{
+                historyWrapper.current.scrollTop = historyWrapper.current.scrollHeight;
+            }, 1);
+        }
     }, [history]);
 
     //websocket
@@ -89,7 +94,7 @@ const Talk = () => {
                     convertMessage.type = "message";
                     setHistory(prev => [...prev, convertMessage]);
                 });
-                stompClient.subscribe("/public/users", (message) => { });
+                stompClient.subscribe("/public/users", (message) => {});
                 stompClient.subscribe("/public/system", (message) => {
                     const convertMessage = JSON.parse(message.body);
                     convertMessage.type = "system";
@@ -99,8 +104,12 @@ const Talk = () => {
                 //stompClient.subscribe("/group/messages", (message)=>{});
                 //stompClient.subscribe("/group/users", (message)=>{});
                 //stompClient.subscribe("/group/alerts", (message)=>{});
+
+                setConnect(true);
             },
-            onDisconnect: () => { },
+            onDisconnect: () => {
+                setConnect(false);
+             },
             // debug: (str)=>{console.log(str)},
         });
         stompClient.activate();
@@ -120,7 +129,7 @@ const Talk = () => {
         const checkSameSender = a.sender && b.sender && a.sender === b.sender;
         const checkSameTime = moment(a.time).format('YYYY-MM-DD H:mm') === moment(b.time).format('YYYY-MM-DD H:mm');
         return checkSameSender === true && checkSameTime === true;
-    }, []);
+    }, []);  
 
     //view
     return (
@@ -159,7 +168,10 @@ const Talk = () => {
                                                 {(m.sender !== nickname && checkSameSenderAndSameTime(m, history[i-1]) === false) && (
                                                 <div className="sender">{m.sender}</div>
                                                 )}
-                                                <div className="content">{m.content}</div>
+                                                <div className="content">
+                                                    {/* img 태그를 찾아 렌더링 처리 */}
+                                                    <TextWithEmoji text={m.content}/>
+                                                </div>
                                             </div>
 
                                             {/* 시간 출력(다음 메세지가 동일 작성자에 같은 시간이면 미출력) */}
