@@ -32,6 +32,12 @@
 .fullscreen .message-container .message-wrapper.my {
     flex-direction: row-reverse;
 }
+.fullscreen .message-container .message-wrapper .content-wrapper {
+    max-width: 70%;
+    min-width: 5em;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
 .fullscreen .message-container .message-wrapper .content-wrapper .sender {
     color: #222;
     font-weight: bold;
@@ -44,9 +50,6 @@
     font-size: 1.25em;
     padding: 0.5em;
     border-radius: 0.25em;
-    min-width: 5em;
-    max-width: 70%;
-    white-space: pre-wrap;
 }
 .fullscreen .message-container .message-wrapper .time {
     display: flex;
@@ -65,7 +68,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-radius: 50%;
+    border-radius: 0.5em;
     background-color: white;
 }
 .fullscreen .message-container .message-wrapper .profile-wrapper .profile > img {
