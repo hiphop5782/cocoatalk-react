@@ -11,6 +11,8 @@
     width: 250px;
     height: 250px;
     background-color: white;
+    background-repeat: no-repeat;
+    background-size: content;
     border-radius: 10px;
     cursor: pointer;
 }
