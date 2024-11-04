@@ -7,7 +7,7 @@ const EmojiContainer = ({
     onEmojiSelect, 
     onEmojiClose,
 })=>{
-    const [emojiList, setEmojiList] = useState(emojiJson);
+    const [emojiList] = useState(emojiJson);
 
     return (
         <div className="emoji-container">
