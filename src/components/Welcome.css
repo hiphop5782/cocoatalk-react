@@ -12,7 +12,8 @@
     height: 250px;
     background-color: white;
     background-repeat: no-repeat;
-    background-size: content;
+    background-size: contain;
+    background-position: center;
     border-radius: 10px;
     cursor: pointer;
 }

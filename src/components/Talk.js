@@ -3,6 +3,11 @@ import "./Talk.css";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
+import { PiMicrophoneStageFill } from "react-icons/pi";
+import { BsEmojiSmile } from "react-icons/bs";
+import { FaPaperclip } from "react-icons/fa";
+import { TbCaptureFilled } from "react-icons/tb";
+
 import moment from "moment";
 import "moment/locale/ko";
 import { useRecoilValue } from "recoil";
@@ -10,6 +15,7 @@ import { nicknameState, profileState } from "@src/utils/recoil";
 
 import axios from "axios";
 import TextWithEmoji from "./TextWithEmoji";
+import EmojiContainer from "./EmojiContainer";
 
 const Talk = () => {
     //state
@@ -131,6 +137,55 @@ const Talk = () => {
         return checkSameSender === true && checkSameTime === true;
     }, []);  
 
+
+    //emoji
+    const [openEmojiTab, setOpenEmojiTab] = useState(false);
+    const [openAttachmentTab, setOpenAttachmentTab] = useState(false);
+    const [openCaptureTab, setOpenCaptureTab] = useState(false);
+    const [openShoutTab, setOpenShoutTab] = useState(false);
+
+    const changeTab = useCallback((mode)=>{
+        switch(mode) {
+            case 'emoji' : 
+                setOpenEmojiTab(!openEmojiTab); 
+                setOpenAttachmentTab(false); 
+                setOpenCaptureTab(false); 
+                setOpenShoutTab(false); 
+                break;
+            case 'attachment' : 
+                setOpenEmojiTab(false); 
+                setOpenAttachmentTab(!openAttachmentTab); 
+                setOpenCaptureTab(false); 
+                setOpenShoutTab(false); 
+                break;
+            case 'capture': 
+                setOpenEmojiTab(false); 
+                setOpenAttachmentTab(false); 
+                setOpenCaptureTab(!openCaptureTab); 
+                setOpenShoutTab(false); 
+                break;
+            case 'shout': 
+                setOpenEmojiTab(false); 
+                setOpenAttachmentTab(false); 
+                setOpenCaptureTab(false); 
+                setOpenShoutTab(!openShoutTab); 
+                break;
+            default:
+                setOpenEmojiTab(false); 
+                setOpenAttachmentTab(false); 
+                setOpenCaptureTab(false); 
+                setOpenShoutTab(false); 
+                break;
+        }
+    }, [openEmojiTab, openAttachmentTab, openCaptureTab, openShoutTab]);
+
+    const selectEmoji = useCallback((emoji)=>{
+        setMessage({
+            ...message,
+            content: message.content + `[[${emoji.name}]]`
+        });
+    }, [message, openEmojiTab])
+
     //view
     return (
         <div className="cocoa-container">
@@ -144,9 +199,43 @@ const Talk = () => {
 
                             {/* 메세지 입력창 */}
                             <div className="input-container">
-                                <textarea name="content" value={message.content} onChange={inputMessageContent} onKeyDown={pressKeyAction}
-                                    className="form-control" style={{ height: 150 }} />
+                                <div className="row">
+                                    <div className="col">
+                                        <textarea name="content" value={message.content} onChange={inputMessageContent} onKeyDown={pressKeyAction}
+                                            className="form-control p-3 fs-3" style={{ height: 150 }} 
+                                            placeholder="메시지 입력"/>
+                                    </div>
+                                </div>
+                                <div className="row mt-2 px-3">
+                                    <div className="col text-start">
+                                        <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="이모티콘"
+                                            onClick={e=>changeTab('emoji')}>
+                                            <BsEmojiSmile className="fs-1"/>
+                                        </button>
+                                        <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="첨부파일"
+                                            onClick={e=>changeTab('attachment')}>
+                                            <FaPaperclip className="fs-1"/>
+                                        </button>
+                                        <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="대화캡쳐"
+                                            onClick={e=>changeTab('capture')}>
+                                            <TbCaptureFilled className="fs-1"/> 
+                                        </button>
+                                        <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="외치기"
+                                            onClick={e=>changeTab('shout')}>
+                                            <PiMicrophoneStageFill className="fs-1"/>
+                                        </button>
+                                    </div>
+                                    <div className="col text-end">
+                                        <button className="btn btn-success btn-lg" 
+                                                disabled={message.content.length === 0} onClick={sendMessage}>
+                                            전송
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* 이모지 선택창 */}
+                            {openEmojiTab && <EmojiContainer onEmojiClose={changeTab} onEmojiSelect={selectEmoji}/>}
 
                             {/* 메세지 출력창 */}
                             <div className="message-container d-flex flex-column" ref={historyWrapper}>
