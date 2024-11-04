@@ -11,15 +11,17 @@ const EmojiContainer = ({
 
     return (
         <div className="emoji-container">
-            <FaXmark className="fs-2 emoji-container-close" onClick={onEmojiClose}/>
-            <div className="row">
-                <div className="col">
-                    {emojiList.map((emoji, index)=>(
-                        <button className="btn" key={index} onClick={e=>onEmojiSelect(emoji, e)}>
-                            <img src={`${process.env.PUBLIC_URL}/assets/emoji/${emoji.name}.${emoji.type}`}/>
-                        </button>
-                    ))}
+            <div className="row mb-1">
+                <div className="col text-end">
+                    <FaXmark className="fs-2 emoji-container-close" onClick={onEmojiClose}/>
                 </div>
+            </div>
+            <div className="emoji-wrapper">
+                {emojiList.map((emoji, index)=>(
+                    <button className="btn" key={index} onClick={e=>onEmojiSelect(emoji, e)}>
+                        <img src={`${process.env.PUBLIC_URL}/assets/emoji/${emoji.name}.${emoji.type}`}/>
+                    </button>
+                ))}
             </div>
         </div>
     );

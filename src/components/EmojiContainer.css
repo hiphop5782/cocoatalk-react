@@ -1,10 +1,12 @@
 .emoji-container {
     background-color: white;
     font-size: 16px;
-    padding: 1em;
+    padding: 0.5em;
+    position: relative;
+}
+.emoji-container .emoji-wrapper {
     max-height: 12em;
     overflow-y: auto;
-    position: relative;
 }
 .emoji-container .btn {
     width: 5em;
@@ -16,9 +18,6 @@
     height: 100%;
 }
 .emoji-container .emoji-container-close {
-    position: absolute;
-    right: 0;
-    top: 0;
     cursor: pointer;
 }
 .emoji-container .emoji-container-close:hover {
