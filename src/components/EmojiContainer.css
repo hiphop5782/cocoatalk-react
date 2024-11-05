@@ -9,8 +9,8 @@
     overflow-y: auto;
 }
 .emoji-container .btn {
-    width: 5em;
     height: 5em;
+    max-height: 5em;
     overflow: hidden;
 }
 .emoji-container .btn > img {

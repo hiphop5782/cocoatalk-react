@@ -7,6 +7,7 @@ import { PiMicrophoneStageFill } from "react-icons/pi";
 import { BsEmojiSmile } from "react-icons/bs";
 import { FaPaperclip } from "react-icons/fa";
 import { TbCaptureFilled } from "react-icons/tb";
+import { FaDownload } from "react-icons/fa";
 
 import moment from "moment";
 import "moment/locale/ko";
@@ -16,6 +17,7 @@ import { nicknameState, profileState } from "@src/utils/recoil";
 import axios from "axios";
 import TextWithEmoji from "./TextWithEmoji";
 import EmojiContainer from "./EmojiContainer";
+import { filesize } from "filesize";
 
 const Talk = () => {
     //state
@@ -106,6 +108,11 @@ const Talk = () => {
                     convertMessage.type = "system";
                     setHistory(prev => [...prev, convertMessage]);
                 });
+                stompClient.subscribe("/public/files", (message)=>{
+                    const convertMessage = JSON.parse(message.body);
+                    convertMessage.type = "file";
+                    setHistory(prev => [...prev, convertMessage]);
+                });
                 //group channel
                 //stompClient.subscribe("/group/messages", (message)=>{});
                 //stompClient.subscribe("/group/users", (message)=>{});
@@ -184,7 +191,36 @@ const Talk = () => {
             ...message,
             content: message.content + `[[${emoji.name}]]`
         });
-    }, [message, openEmojiTab])
+    }, [message, openEmojiTab]);
+
+    const fileSelector = useRef();
+    useEffect(()=>{
+        if(openAttachmentTab === false) return;
+        fileSelector.current.click();
+    }, [openAttachmentTab]);
+
+    const onFileSelected = useCallback((e)=>{
+        const file = e.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.addEventListener("load", async (e)=>{
+            //파일업로드 비동기요청
+            const resp = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/attachment/`, {
+                fileName: file.name,
+                fileContent: e.target.result
+            });
+            //파일업로드 완료 후 웹소켓 메세지 전송
+            client.publish({
+                destination: "/talk/public/files",
+                headers: {
+                    nickname: nickname
+                },
+                body: JSON.stringify({fileName : resp.data.fileName})
+            })
+        });
+        reader.readAsDataURL(file);
+    }, [client]);
 
     //view
     return (
@@ -207,7 +243,7 @@ const Talk = () => {
                                     </div>
                                 </div>
                                 <div className="row mt-2 px-3">
-                                    <div className="col text-start">
+                                    <div className="col-8 text-start">
                                         <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="이모티콘"
                                             onClick={e=>changeTab('emoji')}>
                                             <BsEmojiSmile className="fs-1"/>
@@ -217,15 +253,19 @@ const Talk = () => {
                                             <FaPaperclip className="fs-1"/>
                                         </button>
                                         <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="대화캡쳐"
-                                            onClick={e=>changeTab('capture')}>
+                                            onClick={e=>changeTab('capture')} disabled={true}>
                                             <TbCaptureFilled className="fs-1"/> 
                                         </button>
                                         <button className="btn" data-bs-toggle="tooltip" data-bs-placement="top" title="외치기"
-                                            onClick={e=>changeTab('shout')}>
+                                            onClick={e=>changeTab('shout')} disabled={true}>
                                             <PiMicrophoneStageFill className="fs-1"/>
                                         </button>
+
+                                        <input type="file" ref={fileSelector} onChange={onFileSelected} className="d-none"/>
+
                                     </div>
-                                    <div className="col text-end">
+
+                                    <div className="col-4 text-end">
                                         <button className="btn btn-success btn-lg" 
                                                 disabled={message.content.length === 0} onClick={sendMessage}>
                                             전송
@@ -241,8 +281,8 @@ const Talk = () => {
                             <div className="message-container d-flex flex-column" ref={historyWrapper}>
                                 {history.map((m, i) => (<div key={i}>
                                     {/* 일반 메세지 */}
-                                    <div className={`message-wrapper${m.sender === nickname ? ' my' : ''}`}>
-                                        {m.type === "message" && (<>
+                                    {m.type === "message" && (<>
+                                        <div className={`message-wrapper${m.sender === nickname ? ' my' : ''}`}>
                                             {m.sender !== nickname && (
                                                 <div className="profile-wrapper">
                                                 {checkSameSenderAndSameTime(m, history[i-1]) === false && (
@@ -267,12 +307,43 @@ const Talk = () => {
                                             {checkSameSenderAndSameTime(m, history[i + 1]) === false && (
                                                 <div className="time">{moment(m.time).format("a h:mm")}</div>
                                             )}
-                                        </>)}
-                                    </div>
+                                        </div>
+                                    </>)}
                                     {/* 시스템 메세지 */}
                                     {m.type === "system" && (
                                         <div className="system-wrapper">
                                             {m.action === "enter" ? `${m.nickname} 님이 입장하셨습니다` : `${m.nickname} 님이 퇴장하셨습니다`}
+                                        </div>
+                                    )}
+                                    {/* 파일 메세지 */}
+                                    {m.type === "file" && (
+                                        <div className={`file-wrapper${m.sender !== nickname ? '' : ' my'}`}>
+                                            <div className="fs-4 text-primary d-flex justify-content-between align-items-center">
+                                                <span>첨부파일</span>
+                                                <a className="link-underline-opacity-0" href={`${process.env.REACT_APP_BACKEND_URL}/attachment/${m.realName}`}>
+                                                    <FaDownload/>
+                                                </a>
+                                            </div>
+                                            <hr/>
+                                            <div className="text-dark">{m.fileName}</div>
+                                            <div className="text-muted mt-4">
+                                                <span>유효기간</span>
+                                                <span className="ms-3">{moment(m.expire).format('YYYY-MM-DD a h:mm:ss')}</span>
+                                            </div>
+                                            <div className="text-muted mt-1">
+                                                <span>용량</span>
+                                                <span className="ms-3">{filesize(m.fileSize)}</span>
+                                            </div>
+                                            {m.fileType && (
+                                            <div className="text-muted mt-1">
+                                                <span>유형</span>
+                                                <span className="ms-3">{m.fileType}</span>
+                                            </div>
+                                            )}
+                                            <div className="text-info mt-4">
+                                                <a href={`${process.env.REACT_APP_BACKEND_URL}/attachment/${m.realName}`} 
+                                                    className="link-offset-2 link-offset-2-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">다운로드</a>
+                                            </div>
                                         </div>
                                     )}
                                 </div>

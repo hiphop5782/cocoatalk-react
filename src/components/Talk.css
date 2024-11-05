@@ -93,3 +93,17 @@
 .fullscreen .input-container textarea {
     resize: none;
 }
+
+.fullscreen .file-wrapper {
+    background-color: lightyellow;
+    max-width: 60%;
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.25em;
+}
+.fullscreen .file-wrapper.my {
+    margin-left: auto;
+}
+.fullscreen .file-wrapper .filename {
+    color: black;
+}
