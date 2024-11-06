@@ -1,3 +1,35 @@
 html, body {
   margin:0;
 }
+
+/* 스크롤바 */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 1px; /* 스크롤바 폭 */
+  height: 1px;
+}
+
+::-webkit-scrollbar-track {
+  background: white; /* 트랙 배경색 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #C68E5DE0; /* 어두운 무광 파란색 */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #C68E5DFF; /* hover 시 더 어두운 파란색 */
+}
+
+/* 스크롤바 화살표 숨기기 */
+::-webkit-scrollbar-button {
+  display: none; /* 위아래 스크롤 버튼 제거 */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #C68E5D white;
+}

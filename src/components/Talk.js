@@ -247,14 +247,12 @@ const Talk = () => {
                         <span className="">CocoaTALK</span>
                     </div>
                     <hr className="my-0"/>
+                    <div className="row px-3 pt-2 fs-4">
+                        <div className="col-6 text-start">접속자</div>
+                        <div className="col-6 text-end fw-bold">{formatNumber(users.length)}</div>
+                    </div>
                     <div className="user-list-wrapper mt-2 flex-grow-1">
                         <ul className="list-group list-group-flush user-list">
-                            <li className="list-group-item fs-5">
-                                <div className="row">
-                                    <div className="col-6 text-start">접속자</div>
-                                    <div className="col-6 text-end fw-bold">{formatNumber(users.length)}</div>
-                                </div>
-                            </li>
                             {users.map((user, index)=>(
                             <li className="list-group-item d-flex align-items-center fs-5" key={index}>
                                 <img src={`${process.env.REACT_APP_BACKEND_URL}/profile/${user}`} className="user-profile"/>
