@@ -258,7 +258,12 @@ const Talk = () => {
                             {users.map((user, index)=>(
                             <li className="list-group-item d-flex align-items-center fs-5" key={index}>
                                 <img src={`${process.env.REACT_APP_BACKEND_URL}/profile/${user}`} className="user-profile"/>
-                                <span className="ms-2">{user}</span>
+                                <span className="ms-2">
+                                    {user}
+                                </span>
+                                {user === nickname && (
+                                <span className="ms-2 text-primary">㉯</span>
+                                )}
                             </li>
                             ))}
                         </ul>
@@ -286,7 +291,7 @@ const Talk = () => {
                         <div className="row">
                             <div className="col">
                                 <textarea name="content" value={message.content} onChange={inputMessageContent} onKeyDown={pressKeyAction}
-                                    className="form-control p-3 fs-3" style={{ height: 150 }}
+                                    className="form-control p-3 fs-4" style={{ height: 150 }}
                                     placeholder="메시지 입력" />
                             </div>
                         </div>
