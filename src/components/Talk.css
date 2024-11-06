@@ -1,3 +1,7 @@
+.text-cocoa {
+    color:#C68E5D;
+}
+
 .cocoa-container {
     background-color: #C68E5D;
     position: fixed;
@@ -6,12 +10,8 @@
     right:0;
     bottom:0;
 }
-.message-wrapper {
-    color: white;
-}
-.fullscreen {
+.main-container {
     position: fixed;
-    left: 0;
     right: 0;
     bottom: 0;
     top: 0;
@@ -19,64 +19,65 @@
     display: flex;
     flex-direction: column-reverse;
 }
-.fullscreen .message-container {
+.main-container .message-container {
     flex-grow: 1;
     overflow-y: auto;
 }
-.fullscreen .message-container .message-wrapper {
+.main-container .message-container .message-wrapper {
     margin: 10px 20px;
     display: flex;
     flex-direction: row;
     font-size: 16px;
+    color: white;
 }
-.fullscreen .message-container .message-wrapper.my {
+.main-container .message-container .message-wrapper.my {
     flex-direction: row-reverse;
 }
-.fullscreen .message-container .message-wrapper .content-wrapper {
+.main-container .message-container .message-wrapper .content-wrapper {
     max-width: 70%;
     min-width: 5em;
     white-space: pre-wrap;
     word-break: break-all;
 }
-.fullscreen .message-container .message-wrapper .content-wrapper .sender {
+.main-container .message-container .message-wrapper .content-wrapper .sender {
     color: #222;
     font-weight: bold;
     font-size: 1.25em;
     margin-bottom: 0.25em;
 }
-.fullscreen .message-container .message-wrapper .content-wrapper .content {
+.main-container .message-container .message-wrapper .content-wrapper .content {
     background-color: white;
     color: #222;
     font-size: 1.25em;
     padding: 0.5em;
     border-radius: 0.25em;
 }
-.fullscreen .message-container .message-wrapper .time {
+.main-container .message-container .message-wrapper .time {
     display: flex;
     align-items: end;
     margin-left: 0.5em;
 }
-.fullscreen .message-container .message-wrapper.my .time {
+.main-container .message-container .message-wrapper.my .time {
     margin-right: 0.5em; 
 }
-.fullscreen .message-container .message-wrapper .profile-wrapper {
+.main-container .message-container .message-wrapper .profile-wrapper {
     width: 3em;
     height: 3em;
     margin-right: 0.5em;
 }
-.fullscreen .message-container .message-wrapper .profile-wrapper .profile {
+.main-container .message-container .message-wrapper .profile-wrapper .profile {
     width: 100%;
     height: 100%;
     overflow: hidden;
     border-radius: 0.5em;
     background-color: white;
 }
-.fullscreen .message-container .message-wrapper .profile-wrapper .profile > img {
+.main-container .message-container .message-wrapper .profile-wrapper .profile > img {
     width: 100%;
     height: 100%;
 }
 
-.fullscreen .message-container .system-wrapper {
+.main-container .message-container .system-wrapper {
     border-top: 1px solid black;
     border-bottom:1px solid black;
     background-color: rgba(0, 0, 0, 0.5);
@@ -84,26 +85,102 @@
     width: 100%;
     text-align: center;
     padding: 0.25em;
+    margin: 0.25em 0;
 }
 
-.fullscreen .input-container {
+.main-container .input-container {
     background-color: white;
     min-height: 225px;
 }
-.fullscreen .input-container textarea {
+.main-container .input-container textarea {
     resize: none;
 }
 
-.fullscreen .file-wrapper {
+.main-container .file-wrapper {
     background-color: lightyellow;
     max-width: 60%;
     padding: 0.5em;
     margin: 0.5em;
     border-radius: 0.25em;
 }
-.fullscreen .file-wrapper.my {
+.main-container .file-wrapper.my {
     margin-left: auto;
 }
-.fullscreen .file-wrapper .filename {
+.main-container .file-wrapper .filename {
     color: black;
+}
+
+/* 사이드바 */
+.side-container {
+    position: fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width: 250px;
+    z-index: 999;
+    background-color: white;
+    font-size: 24px;
+}
+
+.side-container .user-profile {
+    width: 1.25em;
+    height: 1.25em;
+}
+
+.main-container {
+    transition: left 0.1s ease-out;
+}
+.side-container {
+    position: fixed;
+    transition-property: left, margin-left;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
+    height:100vh;
+}
+.side-container .user-list-wrapper {
+    overflow-y:auto;
+}
+.side-container .user-list-wrapper .user-list .list-group-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.side-container {
+    left:-250px;
+}
+.side-container.on {
+    left:0px;
+}
+.side-container + .main-container {
+    left: 0px;
+}
+.side-container.on + .main-container {
+    left: 250px;
+}
+.side-container.on + .main-container .sidebar-toggle-btn {
+    visibility: hidden;
+}
+.side-container .sidebar-toggle-btn {
+    position: absolute;
+    top: 40%;
+    left: 100%;
+    z-index: 999;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.75);
+    color: darkgrey;
+    border: none;
+    border-radius: 50%;
+    font-size: 50px;
+    width: 1.25em;
+    height: 1.25em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+    .side-container + .main-container,
+    .side-container.on + .main-container {
+        left: 0;
+    }
 }
