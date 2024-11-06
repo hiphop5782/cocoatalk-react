@@ -94,6 +94,9 @@
 }
 .main-container .input-container textarea {
     resize: none;
+    outline: none;
+    box-shadow: none;
+    border: none;
 }
 
 .main-container .file-wrapper {

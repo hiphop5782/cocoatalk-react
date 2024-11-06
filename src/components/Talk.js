@@ -231,6 +231,10 @@ const Talk = () => {
     //sidebar
     const [openSidebar, setOpenSidebar] = useState(false);
 
+    const formatNumber = useCallback(number=>{
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }, []);
+
     //view
     return (
         <div className="cocoa-container">
@@ -245,12 +249,18 @@ const Talk = () => {
                     <hr className="my-0"/>
                     <div className="user-list-wrapper mt-2 flex-grow-1">
                         <ul className="list-group list-group-flush user-list">
-                        {users.map((user, index)=>(
-                            <li className="list-group-item d-flex align-items-center" key={index}>
+                            <li className="list-group-item fs-5">
+                                <div className="row">
+                                    <div className="col-6 text-start">접속자</div>
+                                    <div className="col-6 text-end fw-bold">{formatNumber(users.length)}</div>
+                                </div>
+                            </li>
+                            {users.map((user, index)=>(
+                            <li className="list-group-item d-flex align-items-center fs-5" key={index}>
                                 <img src={`${process.env.REACT_APP_BACKEND_URL}/profile/${user}`} className="user-profile"/>
                                 <span className="ms-2">{user}</span>
                             </li>
-                        ))}
+                            ))}
                         </ul>
                     </div>
                     <div className="text-end p-3">
